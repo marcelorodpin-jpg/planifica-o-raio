@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f6f8">
+    <meta name="description" content="Calcule o comprimento desenvolvido de uma chapa curva e baixe o desenho 2D planificado.">
+    <title>Curvo — Desenvolvimento de chapa curva</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Curvo, início">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M6 23.5h6.2a10 10 0 0 0 10-10V8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <path d="M17 8h5.2v5.2" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>curvo<span class="brand-period">.</span></span>
+        </a>
+        <span class="topbar-label">FERRAMENTA DE CALDEIRARIA</span>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow"><span class="eyebrow-line"></span> DESENVOLVIMENTO DE CHAPA</p>
+        <h1>Da curva à<br><span>medida certa.</span></h1>
+        <p class="intro-copy">Informe as dimensões da chapa. Calcule o comprimento planificado e visualize os sulcos antes de cortar.</p>
+      </section>
+
+      <section class="workspace" aria-label="Calculadora de chapa curva">
+        <section class="panel input-panel" aria-labelledby="input-title">
+          <div class="panel-heading">
+            <span class="step-number">01</span>
+            <div>
+              <h2 id="input-title">Dados da peça</h2>
+              <p>Dimensões em milímetros</p>
+            </div>
+          </div>
+
+          <form id="calculator-form" novalidate>
+            <label class="field" for="radius">
+              <span class="field-label">Raio externo <span class="field-symbol">R</span></span>
+              <span class="input-wrap">
+                <input id="radius" name="radius" type="number" min="0.01" step="any" value="100" inputmode="decimal" required aria-describedby="radius-help">
+                <span class="unit">mm</span>
+              </span>
+              <span class="field-help" id="radius-help">Medido pela face externa da curva.</span>
+            </label>
+
+            <label class="field" for="thickness">
+              <span class="field-label">Espessura do material <span class="field-symbol">e</span></span>
+              <span class="input-wrap">
+                <input id="thickness" name="thickness" type="number" min="0.01" step="any" value="2" inputmode="decimal" required aria-describedby="thickness-help">
+                <span class="unit">mm</span>
+              </span>
+              <span class="field-help" id="thickness-help">A linha neutra é considerada a meia espessura.</span>
+            </label>
+
+            <label class="field" for="angle">
+              <span class="field-label">Ângulo do arco <span class="field-symbol">θ</span></span>
+              <span class="input-wrap">
+                <input id="angle" name="angle" type="number" min="0.01" max="360" step="any" value="90" inputmode="decimal" required aria-describedby="angle-help">
+                <span class="unit">graus</span>
+              </span>
+              <span class="field-help" id="angle-help">Começa em 90°. Ajuste conforme a peça.</span>
+            </label>
+
+            <label class="field" for="width">
+              <span class="field-label">Largura da chapa <span class="field-symbol">W</span></span>
+              <span class="input-wrap">
+                <input id="width" name="width" type="number" min="0.01" step="any" value="100" inputmode="decimal" required aria-describedby="width-help">
+                <span class="unit">mm</span>
+              </span>
+              <span class="field-help" id="width-help">Ajuste à medida real; sulcos atravessam toda a largura.</span>
+            </label>
+
+            <label class="field" for="start-margin">
+              <span class="field-label">Trecho reto inicial <span class="field-symbol">L₁</span></span>
+              <span class="input-wrap">
+                <input id="start-margin" name="startMargin" type="number" min="0" step="any" value="20" inputmode="decimal" required aria-describedby="start-margin-help">
+                <span class="unit">mm</span>
+              </span>
+              <span class="field-help" id="start-margin-help">Sem sulcos antes do arco.</span>
+            </label>
+
+            <label class="field" for="end-margin">
+              <span class="field-label">Trecho reto final <span class="field-symbol">L₂</span></span>
+              <span class="input-wrap">
+                <input id="end-margin" name="endMargin" type="number" min="0" step="any" value="20" inputmode="decimal" required aria-describedby="end-margin-help">
+                <span class="unit">mm</span>
+              </span>
+              <span class="field-help" id="end-margin-help">Sem sulcos após o arco.</span>
+            </label>
+          </form>
+          <p class="formula-note">L total = L₁ + (R − e/2) × θ × π/180 + L₂</p>
+          <p class="cut-spec">SULCOS: 3,4 mm de abertura + 4 mm livres entre cortes</p>
+        </section>
+
+        <section class="panel result-panel" aria-labelledby="result-title">
+          <div class="result-topline">
+            <div class="panel-heading">
+              <span class="step-number">02</span>
+              <div>
+                <h2 id="result-title">Peça planificada</h2>
+                <p>Vista 2D esquemática</p>
+              </div>
+            </div>
+            <span class="live-badge"><span></span> ATUALIZADO</span>
+          </div>
+
+          <div class="drawing-frame">
+            <div class="drawing-caption"><span>VISTA SUPERIOR · SULCOS ATRAVESSAM A LARGURA</span><span>UNIDADE: mm</span></div>
+            <svg id="drawing" class="drawing" viewBox="0 0 800 285" role="img" aria-labelledby="drawing-title drawing-desc">
+              <title id="drawing-title">Desenho 2D da chapa planificada</title>
+              <desc id="drawing-desc">Representação da chapa com dimensões atualizadas pelo cálculo.</desc>
+              <defs>
+                <marker id="arrow" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse" markerUnits="strokeWidth">
+                  <path d="M0 0 7 3.5 0 7z" fill="#60758b"/>
+                </marker>
+              </defs>
+              <g id="drawing-content"></g>
+            </svg>
+            <div class="drawing-legend">
+              <span class="legend-item"><i class="legend-swatch legend-swatch-margin"></i>Trechos retos sem sulcos</span>
+              <span class="legend-item"><i class="legend-swatch legend-swatch-arc"></i>Arco desenvolvido</span>
+              <span class="legend-item"><i class="legend-swatch legend-swatch-cut"></i>Sulco de 3,4 mm</span>
+            </div>
+          </div>
+
+          <div id="error-message" class="error-message" role="alert" hidden></div>
+
+          <div class="result-summary" aria-live="polite" aria-atomic="true">
+            <div class="result-label"><span>COMPRIMENTO TOTAL PLANIFICADO</span><span class="result-equals">L =</span></div>
+            <div class="result-value"><strong id="total-length">—</strong><span>mm</span></div>
+            <p class="result-detail" id="result-detail">Trechos retos + desenvolvimento do arco</p>
+          </div>
+
+          <div class="measurements" aria-label="Detalhamento das medidas">
+            <div><span>Raio neutro</span><strong id="neutral-radius">— <small>mm</small></strong></div>
+            <div><span>Comprimento do arco</span><strong id="arc-length">— <small>mm</small></strong></div>
+            <div><span>Sulcos na largura</span><strong id="cut-count">—</strong></div>
+          </div>
+
+          <button class="download-button" id="download-button" type="button">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M10 3v9m0 0 3.5-3.5M10 12 6.5 8.5M4 14v2.5h12V14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Baixar desenho em SVG
+          </button>
+          <p class="drawing-note">Desenho esquemático. Confirme as dimensões e os parâmetros de corte antes de fabricar.</p>
+        </section>
+      </section>
+
+      <footer class="footer"><span>CURVO <span class="footer-dot">/</span> CÁLCULO GEOMÉTRICO</span><span>Comprimento medido pela linha neutra</span></footer>
+    </main>
+  </body>
+</html>
